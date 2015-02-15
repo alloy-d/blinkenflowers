@@ -40,7 +40,7 @@ uint8_t cycle = 0;
 uint8_t cycle_step = 1;
 
 // We want to run more than one loop in the time it takes for one cycle.
-#define TICKS_PER_CYCLE 5
+#define TICKS_PER_CYCLE 3
 uint8_t ticks = 0;
 
 void updateCycle();

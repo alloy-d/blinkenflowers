@@ -16,11 +16,22 @@
 #define STRIP 7
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, STRIP, NEO_GRB+NEO_KHZ800);
 
+
+#define HALLOWEEN
+
 // Each loop, any unlit pixel will light itself with this probability.
+#ifdef HALLOWEEN
+#define SPARKLE_PROBABILITY 0.003
+#else
 #define SPARKLE_PROBABILITY 0.01
+#endif
 
 // A higher SPARKLE_RATE means faster sparkles.
+#ifdef HALLOWEEN
+#define SPARKLE_RATE 1
+#else
 #define SPARKLE_RATE 2
+#endif
 
 #define SPARKLE_STEP SPARKLE_RATE*2
 
@@ -28,7 +39,11 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, STRIP, NEO_GRB+NEO_KHZ800);
 #define SPARKLE_START SPARKLE_STEP+1
 
 // Maximum brightness of a sparkle.
+#ifdef HALLOWEEN
+#define SPARKLE_PEAK 128
+#else
 #define SPARKLE_PEAK 64
+#endif
 
 // Some of the pixels are literally hanging out of the vase.
 // We'll just ignore those.
@@ -109,11 +124,15 @@ void updateStrip() {
   uint16_t n = strip.numPixels();
   for (i = SPARKLE_SKIP; i < n; ++i) {
     color = strip.getPixelColor(i);
-    value = color & 0xff;
+    value = (color >> 16) & 0xff;
 
     if ((value == 0) && (rand() < SPARKLE_PROBABILITY * RAND_MAX)) {
       // If this pixel is off, maybe we should turn it on.
+      #ifdef HALLOWEEN
+      strip.setPixelColor(i, SPARKLE_START, 0, 0);
+      #else
       strip.setPixelColor(i, SPARKLE_START, SPARKLE_START, SPARKLE_START);
+      #endif
     } else {
       // If the single-color value is odd, we're going up.
       if (value % 2 == 1) {
@@ -123,7 +142,11 @@ void updateStrip() {
           value -= 1;
         } else {
           // Otherwise, keep steppin' it up!
+          #ifdef HALLOWEEN
+          strip.setPixelColor(i, value+SPARKLE_STEP, 0, 0);
+          #else
           strip.setPixelColor(i, value+SPARKLE_STEP, value+SPARKLE_STEP, value+SPARKLE_STEP);
+          #endif
         }
       }
 
@@ -133,7 +156,11 @@ void updateStrip() {
         if (SPARKLE_STEP > value) {
           strip.setPixelColor(i, 0, 0, 0);
         } else {
+          #ifdef HALLOWEEN
+          strip.setPixelColor(i, value-SPARKLE_STEP, 0, 0);
+          #else
           strip.setPixelColor(i, value-SPARKLE_STEP, value-SPARKLE_STEP, value-SPARKLE_STEP);
+          #endif
         }
       }
     }

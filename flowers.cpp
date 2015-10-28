@@ -65,7 +65,7 @@ void updateStrip();
 
 void setup() {
   uint16_t i;
-  
+
   // All of the flowerset color pins will be PWMed output.
   pinMode(FS1R, OUTPUT);
   pinMode(FS1G, OUTPUT);
@@ -98,7 +98,7 @@ void updateCycle() {
   } else {
     ticks = 0;
   }
-  
+
   cycle += cycle_step;
 
   // If we've hit the max or min for a cycle, reverse the direction.

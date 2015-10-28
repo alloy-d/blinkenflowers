@@ -21,14 +21,14 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, STRIP, NEO_GRB+NEO_KHZ800);
 
 // Each loop, any unlit pixel will light itself with this probability.
 #ifdef HALLOWEEN
-#define SPARKLE_PROBABILITY 0.003
+#define SPARKLE_PROBABILITY 0.01
 #else
 #define SPARKLE_PROBABILITY 0.01
 #endif
 
 // A higher SPARKLE_RATE means faster sparkles.
 #ifdef HALLOWEEN
-#define SPARKLE_RATE 1
+#define SPARKLE_RATE 2
 #else
 #define SPARKLE_RATE 2
 #endif
@@ -40,7 +40,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, STRIP, NEO_GRB+NEO_KHZ800);
 
 // Maximum brightness of a sparkle.
 #ifdef HALLOWEEN
-#define SPARKLE_PEAK 128
+#define SPARKLE_PEAK 255
 #else
 #define SPARKLE_PEAK 64
 #endif
@@ -84,7 +84,11 @@ void loop() {
   updateFlowerset2();
   updateStrip();
 
+  #ifdef HALLOWEEN
+  delay(40);
+  #else
   delay(20);
+  #endif
 }
 
 void updateCycle() {
@@ -103,18 +107,31 @@ void updateCycle() {
   }
 }
 
-// Flowerset 1 will cycle from white to bluish and back.
 void updateFlowerset1() {
+  #ifdef HALLOWEEN
+  analogWrite(FS1R, 0);
+  analogWrite(FS1G, 0);
+  analogWrite(FS1B, 255);
+  #else
+  // Flowerset 1 will cycle from white to bluish and back.
   analogWrite(FS1R, 255 - cycle);
   analogWrite(FS1G, 255 - cycle);
   analogWrite(FS1B, 255);
+  #endif
 }
 
 
 void updateFlowerset2() {
+  #ifdef HALLOWEEN
+  analogWrite(FS2R, 0);
+  analogWrite(FS2G, 0);
+  analogWrite(FS2B, 255);
+  #else
+  // Flowerset 2 will cycle from reddish to white and back.
   analogWrite(FS2R, 255);
   analogWrite(FS2G, cycle);
   analogWrite(FS2B, cycle);
+  #endif
 }
 
 void updateStrip() {
@@ -143,6 +160,7 @@ void updateStrip() {
         } else {
           // Otherwise, keep steppin' it up!
           #ifdef HALLOWEEN
+          //strip.setPixelColor(i, value+SPARKLE_STEP, (int)((value-SPARKLE_STEP)/4), 0);
           strip.setPixelColor(i, value+SPARKLE_STEP, 0, 0);
           #else
           strip.setPixelColor(i, value+SPARKLE_STEP, value+SPARKLE_STEP, value+SPARKLE_STEP);
@@ -157,6 +175,7 @@ void updateStrip() {
           strip.setPixelColor(i, 0, 0, 0);
         } else {
           #ifdef HALLOWEEN
+          //strip.setPixelColor(i, value-SPARKLE_STEP, (int)((value-SPARKLE_STEP)/4), 0);
           strip.setPixelColor(i, value-SPARKLE_STEP, 0, 0);
           #else
           strip.setPixelColor(i, value-SPARKLE_STEP, value-SPARKLE_STEP, value-SPARKLE_STEP);
